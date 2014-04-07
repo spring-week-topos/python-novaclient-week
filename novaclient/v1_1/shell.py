@@ -3567,8 +3567,8 @@ def do_geo_tags_create(cs, args):
     """Show current geotags."""
     kwargs = {'compute_name': args.host, 
               'valid_invalid': args.state,
-              'longitude': args.long,
-              'latitude': args.lat
+              'plt_longitude': args.long,
+              'plt_latitude': args.lat
               
               }
               
@@ -3588,9 +3588,9 @@ def do_geo_tags_update(cs, args):
     if args.state:
         kwargs['valid_invalid'] = args.state
     if args.long:
-        kwargs['longitude'] = args.long
+        kwargs['plt_longitude'] = args.long
     if args.lat:
-        kwargs['longitude'] = args.lat
+        kwargs['plt_latitude'] = args.lat
         
     cs.geo_tags.update(args.host_or_id, **kwargs)
     
