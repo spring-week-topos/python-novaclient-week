@@ -27,6 +27,7 @@ from novaclient.v1_1 import floating_ip_pools
 from novaclient.v1_1 import floating_ips
 from novaclient.v1_1 import floating_ips_bulk
 from novaclient.v1_1 import fping
+from novaclient.v1_1 import geo_tags
 from novaclient.v1_1 import hosts
 from novaclient.v1_1 import hypervisors
 from novaclient.v1_1 import images
@@ -119,7 +120,7 @@ class Client(object):
         self.availability_zones = \
             availability_zones.AvailabilityZoneManager(self)
         self.server_groups = server_groups.ServerGroupsManager(self)
-
+        self.geo_tags = geo_tags.GeoTagsManager(self)
         # Add in any extensions...
         if extensions:
             for extension in extensions:

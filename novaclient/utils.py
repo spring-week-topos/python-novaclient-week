@@ -119,6 +119,7 @@ def print_list(objs, fields, formatters={}, sortby_index=None):
                     field_name = field.replace(' ', '_')
                 else:
                     field_name = field.lower().replace(' ', '_')
+                
                 data = getattr(o, field_name, '')
                 if data is None:
                     data = '-'

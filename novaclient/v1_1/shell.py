@@ -2846,6 +2846,8 @@ def do_service_list(cs, args):
     # so as not to add the column when the extended ext is not enabled.
     if result and hasattr(result[0], 'disabled_reason'):
         columns.append("Disabled Reason")
+    if result:
+        columns.append("Geo Tag")
     utils.print_list(result, columns)
 
 
@@ -3541,3 +3543,69 @@ def do_server_group_get(cs, args):
     """Get a specific server group."""
     server_group = cs.server_groups.get(args.id)
     _print_server_group_details([server_group])
+
+
+@utils.arg('--host', metavar='<hostname>', default=None,
+           help=_('Name of host.'))
+def do_geo_tags_list(cs, args):
+    """Show current geotags."""
+    result = cs.geo_tags.list(host=args.host)
+    
+    columns = ['Server Name', 'Valid_Invalid', 'mac_address',
+               'plt_longitude', 'plt_latitude']
+    
+    utils.print_list(result, columns)
+
+@utils.arg('host', metavar='<hostname>', help=_('Name of host.'))
+@utils.arg('--state', metavar='<valid>', default='Valid',
+           dest='state', help=_('Valid/Invalid.'))
+@utils.arg('--plt-longitude', metavar='<longitude>', default=None,
+           dest='long', help=_('Longitude Coord.'))
+@utils.arg('--plt-latitude', metavar='<latitude>', default=None,
+           dest='lat', help=_('Latitude.'))
+def do_geo_tags_create(cs, args):
+    """Show current geotags."""
+    kwargs = {'compute_name': args.host, 
+              'valid_invalid': args.state,
+              'longitude': args.long,
+              'latitude': args.lat
+              
+              }
+              
+    cs.geo_tags.create(**kwargs)
+ 
+
+@utils.arg('host_or_id', metavar='<hostname or id>', help=_('Name of host or GeoTag ID'))
+@utils.arg('--state', metavar='<valid>', 
+           dest='state', help=_('Valid/Invalid'))
+@utils.arg('--plt-longitude', metavar='<longitude>', 
+           dest='long', help=_('Longitude Coord'))
+@utils.arg('--plt-latitude', metavar='<latitude>', 
+           dest='lat', help=_('Latitude.'))
+def do_geo_tags_update(cs, args):
+    """Show current geotags."""
+    kwargs = {}
+    if args.state:
+        kwargs['valid_invalid'] = args.state
+    if args.long:
+        kwargs['longitude'] = args.long
+    if args.lat:
+        kwargs['longitude'] = args.lat
+        
+    cs.geo_tags.update(args.host_or_id, **kwargs)
+    
+@utils.arg('host_or_id', metavar='<hostname or id>', help=_('Name of host or GeoTag ID'))
+def do_geo_tags_delete(cs, args):
+    """Delete geotags."""
+    cs.geo_tags.delete(args.host_or_id)
+    
+def _print_geo_tag(geo_tag):
+    utils.print_list(geo_tag, ['ID', 'Server Name', 'mac_address', 'plt_longitude',
+                               'plt_latitude'])
+
+    
+@utils.arg('host_or_id', metavar='<hostname or id>', help=('Name of host or GeoTag ID'))
+def do_geo_tags_show(cs, args):
+    """Show details about a GeoTag."""
+    geo_tag = cs.geo_tags.show(args.host_or_id)
+    _print_geo_tag([geo_tag])
