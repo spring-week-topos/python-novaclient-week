@@ -3552,7 +3552,7 @@ def do_geo_tags_list(cs, args):
     result = cs.geo_tags.list(host=args.host)
     
     columns = ['Server Name', 'Valid_Invalid', 'mac_address',
-               'plt_longitude', 'plt_latitude']
+               'plt_longitude', 'plt_latitude', 'loc_or_error_msg']
     
     utils.print_list(result, columns)
 
@@ -3563,15 +3563,16 @@ def do_geo_tags_list(cs, args):
            dest='long', help=_('Longitude Coord.'))
 @utils.arg('--plt-latitude', metavar='<latitude>', default=None,
            dest='lat', help=_('Latitude.'))
+@utils.arg('--location', metavar='<location>', default=None,
+           dest='loc', help=_('Location.'))
 def do_geo_tags_create(cs, args):
     """Show current geotags."""
     kwargs = {'compute_name': args.host, 
               'valid_invalid': args.state,
               'plt_longitude': args.long,
-              'plt_latitude': args.lat
-              
-              }
-              
+              'plt_latitude': args.lat,
+              'location': args.loc
+              }              
     cs.geo_tags.create(**kwargs)
  
 
@@ -3582,6 +3583,8 @@ def do_geo_tags_create(cs, args):
            dest='long', help=_('Longitude Coord'))
 @utils.arg('--plt-latitude', metavar='<latitude>', 
            dest='lat', help=_('Latitude.'))
+@utils.arg('--location', metavar='<location>', default=None,
+           dest='loc', help=_('Location.'))
 def do_geo_tags_update(cs, args):
     """Show current geotags."""
     kwargs = {}
@@ -3591,6 +3594,8 @@ def do_geo_tags_update(cs, args):
         kwargs['plt_longitude'] = args.long
     if args.lat:
         kwargs['plt_latitude'] = args.lat
+    if args.loc:
+        kwargs['location'] = args.loc
         
     cs.geo_tags.update(args.host_or_id, **kwargs)
     
